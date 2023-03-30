@@ -27,6 +27,15 @@
       "compilerOptions": {
         "tsConfigPath": "apps/worker/tsconfig.app.json"
       }
+    },
+    "worker-update": {
+      "type": "application",
+      "root": "apps/worker-update",
+      "entryFile": "main",
+      "sourceRoot": "apps/worker-update/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/worker-update/tsconfig.app.json"
+      }
     }
   }
 }

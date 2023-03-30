@@ -1,0 +1,39 @@
+version: "3"
+
+services:
+  mongodb:
+    image: mongo:latest
+    environment:
+      - MONGODB_DATABASE="todo_db"
+    ports:
+      - 27017:27017
+  rabbitmq3:
+    container_name: "rabbitmq"
+    image: rabbitmq:3.10-management-alpine
+    environment:
+      - RABBITMQ_DEFAULT_USER=dan
+      - RABBITMQ_DEFAULT_PASS=dan123
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+  es01:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.9.1
+    container_name: elastic
+    environment:
+      - node.name=es01
+      - cluster.name=es-docker-cluster
+      - discovery.seed_hosts=es01
+      - cluster.initial_master_nodes=es01
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - ELASTIC_PASSWORD=dan123
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - data01:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+volumes:
+  data01: {} 

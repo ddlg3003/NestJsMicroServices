@@ -24,10 +24,10 @@ import { WorkerUpdateService } from './worker-update.service';
     ElasticsearchModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        node: configService.get('ELASTICSEARCH_NODE'),
+        node: configService.get<string>('ELASTICSEARCH_NODE'),
         auth: {
-          username: configService.get('ELASTICSEARCH_USERNAME'),
-          password: configService.get('ELASTICSEARCH_PASSWORD'),
+          username: configService.get<string>('ELASTICSEARCH_USERNAME'),
+          password: configService.get<string>('ELASTICSEARCH_PASSWORD'),
         }
       }),
       inject: [ConfigService],

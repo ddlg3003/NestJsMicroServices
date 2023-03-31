@@ -1,7 +1,7 @@
-export interface Todo {
+export interface TodoDoc {
   id: string;
   title: string;
-  isCompleted: boolean;
+  isComplete: boolean;
   createdAt: Date,
   updatedAt: Date,
 }

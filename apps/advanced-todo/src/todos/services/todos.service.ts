@@ -9,13 +9,15 @@ import { Cache } from 'cache-manager';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Todo, TodoDocument } from '../shemas/todo.schema';
-import { CreateTodoDto } from '../dtos/create-todo.dto';
 import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
 import { UpdateTodoDto } from '../dtos/update-todo.dto';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { ConfigService } from '@nestjs/config';
-import { ElasticBody } from '../../types/elastic-body.interface';
-import { TodoDoc } from '../../types/todo.interface';
+import { ElasticBody } from '../types/elastic-body.interface';
+import { TodoDoc } from '../types/todo-doc';
+import { ROUTING_KEY, TODO_EXCHANGE } from 'apps/global/globalVariables';
+import { LIMIT } from '../../utils/common';
+import { CreateTodoDto } from '../dtos/create-todo.dto';
 
 @Injectable()
 export class TodosService {
@@ -30,17 +32,17 @@ export class TodosService {
   async create(createTodoDto: CreateTodoDto): Promise<Todo> {
     const todo = new this.todoModel(createTodoDto);
     const result = await todo.save();
-    this.rmqConnection.publish<Todo>('todo-exchange', 'create', result);
+    this.rmqConnection.publish<Todo>(TODO_EXCHANGE, ROUTING_KEY.CREATE, result);
 
     return result;
   }
 
-  async search(keyword: string) {
+  async search(keyword: string, page: number = 1) {
     try {
       let data: TodoDoc[];
-      const existedVal: string = await this.cacheManager.get(keyword);
+      const existedVal: string = await this.cacheManager.get(`${keyword}_${page}`);
 
-      if(existedVal) {
+      if (existedVal) {
         data = JSON.parse(existedVal);
         console.log('[Redis] Get data from cache');
       } else {
@@ -51,6 +53,8 @@ export class TodosService {
         }: { body: ElasticBody } = await this.elasticSearchService.search({
           index: this.configService.get<string>('INDEX'),
           body: {
+            from: (page - 1) * LIMIT,
+            size: LIMIT,
             query: {
               match: {
                 title: keyword,
@@ -58,9 +62,9 @@ export class TodosService {
             },
           },
         });
-  
+
         data = hits.map((item) => item._source);
-        this.cacheManager.set(keyword, JSON.stringify(data), 900);
+        this.cacheManager.set(`${keyword}_${page}`, JSON.stringify(data), 900);
       }
 
       return data;
@@ -69,14 +73,14 @@ export class TodosService {
     }
   }
 
-  async update(id: string, createTodoDto: UpdateTodoDto): Promise<Todo> {
-    const todo = await this.todoModel.findByIdAndUpdate(id, createTodoDto, {
+  async update(id: string, updateTodoDto: UpdateTodoDto): Promise<Todo> {
+    const todo = await this.todoModel.findByIdAndUpdate(id, updateTodoDto, {
       new: true,
       runValidators: true,
     });
 
     if (todo) {
-      this.rmqConnection.publish<Todo>('todo-exchange', 'update', todo);
+      this.rmqConnection.publish<Todo>(TODO_EXCHANGE, ROUTING_KEY.UPDATE, todo);
       this.cacheManager.reset();
     }
 

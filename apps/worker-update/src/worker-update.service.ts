@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { RabbitSubscribe } from '@golevelup/nestjs-rabbitmq';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { Todo } from './types/todo.interface';
+import { ROUTING_KEY, TODO_EXCHANGE } from 'apps/global/globalVariables';
 
 @Injectable()
 export class WorkerUpdateService {
@@ -12,8 +13,8 @@ export class WorkerUpdateService {
   ) {}
 
   @RabbitSubscribe({
-    exchange: 'todo-exchange',
-    routingKey: 'update',
+    exchange: TODO_EXCHANGE,
+    routingKey: ROUTING_KEY.UPDATE,
     queueOptions: {
       exclusive: true,
     },

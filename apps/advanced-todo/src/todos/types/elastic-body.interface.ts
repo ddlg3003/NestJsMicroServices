@@ -1,4 +1,4 @@
-import { TodoDoc } from "./todo.interface";
+import { TodoDoc } from './todo-doc';
 
 export interface ElasticBody {
   took: number;
@@ -11,7 +11,7 @@ export interface ElasticBody {
   };
   hits: {
     total: {
-      value: number; 
+      value: number;
       relation: string;
     };
     max_score: number;

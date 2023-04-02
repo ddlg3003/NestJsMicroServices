@@ -7,6 +7,7 @@ import { TodosController } from './controllers/todos.controller';
 import { TodosService } from './services/todos.service';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { Todo, TodoSchema } from './shemas/todo.schema';
+import { TODO_EXCHANGE } from 'apps/global/globalVariables';
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import { Todo, TodoSchema } from './shemas/todo.schema';
       useFactory: async (config: ConfigService) => ({
         exchanges: [
           {
-            name: 'todo-exchange',
+            name: TODO_EXCHANGE,
             type: 'direct',
           },
         ],

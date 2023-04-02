@@ -16,7 +16,8 @@
       "entryFile": "main",
       "sourceRoot": "apps/advanced-todo/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/advanced-todo/tsconfig.app.json"
+        "tsConfigPath": "apps/advanced-todo/tsconfig.app.json",
+        "plugins": ["@nestjs/swagger"]
       }
     },
     "worker": {

@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { MulterModule } from '@nestjs/platform-express';
 import { TodosModule } from './todos/todos.module';
 
 @Module({
@@ -12,6 +13,9 @@ import { TodosModule } from './todos/todos.module';
         uri: config.get<string>('MONGO_URI'),
       }),
       inject: [ConfigService],
+    }),
+    MulterModule.register({
+      dest: './uploads/todos'
     }),
     TodosModule,
   ],

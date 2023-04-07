@@ -5,7 +5,7 @@ import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { Todo } from './types/todo.interface';
 import { SearchTodo } from './types/search-todo.interface';
 import { HttpStatus } from '@nestjs/common/enums';
-import { ROUTING_KEY, TODO_EXCHANGE } from 'apps/global/globalVariables';
+import { ROUTING_KEY, TODO_EXCHANGE } from './utils/globalVariables';
 
 @Injectable()
 export class WorkerService {

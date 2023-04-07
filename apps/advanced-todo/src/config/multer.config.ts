@@ -17,7 +17,7 @@ export const multerOptions = {
           HttpStatus.BAD_REQUEST,
         ),
         false,
-      );
+      );  
     }
     callback(null, true);
   },

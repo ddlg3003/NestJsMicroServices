@@ -7,7 +7,7 @@ import { TodosController } from './controllers/todos.controller';
 import { TodosService } from './services/todos.service';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { Todo, TodoSchema } from './shemas/todo.schema';
-import { TODO_EXCHANGE } from 'apps/global/globalVariables';
+import { TODO_EXCHANGE } from 'apps/advanced-todo/src/utils/globalVariables';
 
 @Module({
   imports: [

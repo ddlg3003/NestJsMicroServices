@@ -3,17 +3,17 @@ import {
   Controller,
   Post,
   Put,
-  Param, 
+  Param,
   Query,
   Get,
   HttpException,
   HttpStatus,
   UseInterceptors,
   UploadedFile,
+  ParseFilePipe,
 } from '@nestjs/common';
 import {
   ApiOperation,
-  ApiResponse,
   ApiTags,
   ApiBody,
   ApiParam,
@@ -34,9 +34,10 @@ import { multerOptions } from '../../config/multer.config';
 import { resolve } from 'path';
 import * as reader from 'xlsx';
 import { convertDateExcel } from '../../utils/helperFunctions';
-import { UPLOAD_PATH } from '../../utils/common';
+import { UPLOAD_PATH } from '../../utils/globalVariables';
 import { SearchQuery } from '../dtos/search-query.dto';
 import { FileUploadDto } from '../dtos/file-upload.dto';
+import { FileIsDefinedValidator } from '../../utils/validation';
 
 @ApiTags('todos')
 @Controller('todos')
@@ -66,27 +67,33 @@ export class TodosController {
   })
   @ApiOperation({ summary: 'Upload a todo xls file and import to database' })
   @ApiOkResponse({
-    status: 200,
+    status: 201,
     description: 'Import completed',
   })
   @ApiBadRequestResponse({
     description: 'Not upload a xls file or upload a > 1MB file',
   })
-  async readFileAndCreate(@UploadedFile() file: Express.Multer.File) {
-    const xlsData = reader.readFile(
-      resolve(__dirname, UPLOAD_PATH),
-    );
+  async readFileAndCreate(
+    @UploadedFile(
+      new ParseFilePipe({ validators: [new FileIsDefinedValidator()] }),
+    )
+    file: Express.Multer.File,
+  ) {
+    const xlsData = reader.readFile(resolve(__dirname, UPLOAD_PATH));
     const arrData: { title: string; createdAt: number }[] =
       reader.utils.sheet_to_json(xlsData.Sheets[xlsData.SheetNames[0]]);
 
     arrData
-      .map(data => new CreateTodoDto(data.title, convertDateExcel(data.createdAt)))
-      .forEach(todoXls => {
+      .map(
+        (data) =>
+          new CreateTodoDto(data.title, convertDateExcel(data.createdAt)),
+      )
+      .forEach((todoXls) => {
         this.todoService.create(todoXls);
       });
 
     return {
-      status: HttpStatus.OK,
+      status: HttpStatus.CREATED,
       message: 'Upload completed',
     };
   }
@@ -102,7 +109,10 @@ export class TodosController {
     description: 'No todos found',
   })
   async search(@Query() queries: SearchQuery): Promise<TodoDoc[]> {
-    const data = await this.todoService.search(queries.keyword.toLowerCase(), queries.page);
+    const data = await this.todoService.search(
+      queries.keyword.toLowerCase(),
+      queries.page,
+    );
 
     if (!data.length) {
       throw new HttpException('No todos found', HttpStatus.NOT_FOUND);
@@ -117,7 +127,7 @@ export class TodosController {
     required: true,
     description: 'Should be an id of a todo that exists in the database',
     type: String,
-    example: '64298a9e297c788589ff502a'
+    example: '64298a9e297c788589ff502a',
   })
   @ApiOperation({ summary: 'Update a todo' })
   @ApiOkResponse({

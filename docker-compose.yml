@@ -44,6 +44,35 @@ services:
     command: redis-server --save 20 1 --loglevel warning --requirepass dan303
     volumes: 
       - cache:/data
+  todo: 
+    container_name: todo-api
+    image: todo:latest
+    ports:
+      - "3003:3003"
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017/todo_db
+      - ELASTICSEARCH_NODE=http://es01:9200
+      - RABBITMQ_URI=amqp://dan:dan123@rabbitmq3:5672
+      - REDIS_HOST=cache
+    depends_on:
+      - mongodb
+      - es01
+      - cache
+      - rabbitmq3
+  worker: 
+    container_name: worker
+    image: worker:latest
+    ports:
+      - "3004:3004"
+    environment:
+      - ELASTICSEARCH_NODE=http://es01:9200
+      - RABBITMQ_URI=amqp://dan:dan123@rabbitmq3:5672
+    depends_on:
+      - mongodb
+      - es01
+      - cache
+      - rabbitmq3
+      - todo
 volumes:
   cache:
     driver: local

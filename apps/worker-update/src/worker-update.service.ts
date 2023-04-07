@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { RabbitSubscribe } from '@golevelup/nestjs-rabbitmq';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { Todo } from './types/todo.interface';
-import { ROUTING_KEY, TODO_EXCHANGE } from 'apps/global/globalVariables';
+import { ROUTING_KEY, TODO_EXCHANGE } from './utils/globalVariables';
 
 @Injectable()
 export class WorkerUpdateService {

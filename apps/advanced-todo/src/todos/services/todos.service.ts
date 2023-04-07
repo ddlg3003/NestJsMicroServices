@@ -15,8 +15,8 @@ import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { ConfigService } from '@nestjs/config';
 import { ElasticBody } from '../types/elastic-body.interface';
 import { TodoDoc } from '../types/todo-doc';
-import { ROUTING_KEY, TODO_EXCHANGE } from 'apps/global/globalVariables';
-import { LIMIT } from '../../utils/common';
+import { ROUTING_KEY, TODO_EXCHANGE } from 'apps/advanced-todo/src/utils/globalVariables';
+import { LIMIT } from '../../utils/globalVariables';
 import { CreateTodoDto } from '../dtos/create-todo.dto';
 
 @Injectable()

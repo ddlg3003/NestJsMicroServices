@@ -12,5 +12,5 @@ RUN npm install --only=production --omit=dev
 COPY .env .
 COPY --from=build /usr/src/app/dist ./dist
 EXPOSE 3004
- CMD ["npm", "run", "start-worker:prod"]
+CMD ["npm", "run", "start-worker:prod"]
 

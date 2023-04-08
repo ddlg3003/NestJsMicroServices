@@ -24,7 +24,7 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+[Nest](https://github.com/nestjs/nest) framework TypeScript repository.
 
 ## Installation
 
@@ -32,18 +32,46 @@
 $ npm install
 ```
 
-## Running the app
+## Running the app yourself
+Make sure you install all these:
+- Elastic search (7.9.1).
+- Redis (7.0).
+- MongoDB.
+- RabbitMQ (3.10).
 
+You can go to [Docker hub](https://hub.docker.com/) and checkout above images version.
+
+Run these command below to start services:
 ```bash
-# development
-$ npm run start
-
-# watch mode
+# start todo server in dev mode
 $ npm run start:dev
 
-# production mode
-$ npm run start:prod
+# start worker in dev mode
+$ npm run start-worker:dev 
 ```
+
+
+## Running the app with docker-compose
+Please make sure that you have docker desktop installed in your local machine and run these command:
+
+```bash
+# build todo server image
+$ docker build -f apps/advanced-todo/Dockerfile -t todo:latest .
+
+# build worker image
+$ docker build -f apps/worker/Dockerfile -t worker:latest . 
+
+# run all containers
+$ docker compose up
+```
+
+Run this command to stop and delete all containers:
+```bash
+$ docker compose down
+```
+
+## APIs doc
+Go to http://localhost:3003/api to test APIs.
 
 ## Test
 
@@ -58,16 +86,4 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## Support
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).

@@ -16,8 +16,7 @@
       "entryFile": "main",
       "sourceRoot": "apps/advanced-todo/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/advanced-todo/tsconfig.app.json",
-        "plugins": ["@nestjs/swagger"]
+        "tsConfigPath": "apps/advanced-todo/tsconfig.app.json"
       }
     },
     "worker": {
@@ -27,15 +26,6 @@
       "sourceRoot": "apps/worker/src",
       "compilerOptions": {
         "tsConfigPath": "apps/worker/tsconfig.app.json"
-      }
-    },
-    "worker-update": {
-      "type": "application",
-      "root": "apps/worker-update",
-      "entryFile": "main",
-      "sourceRoot": "apps/worker-update/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/worker-update/tsconfig.app.json"
       }
     }
   }

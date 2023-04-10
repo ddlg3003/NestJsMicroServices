@@ -41,7 +41,7 @@ Make sure you install all these:
 
 You can go to [Docker hub](https://hub.docker.com/) and checkout above images version.
 
-Run these command below to start services:
+Run these commands below to start services:
 ```bash
 # start todo server in dev mode
 $ npm run start:dev
@@ -52,7 +52,7 @@ $ npm run start-worker:dev
 
 
 ## Running the app with docker-compose
-Please make sure that you have docker desktop installed in your local machine and run these command:
+Please make sure that you have docker desktop installed in your local machine and run these commands:
 
 ```bash
 # build todo server image
